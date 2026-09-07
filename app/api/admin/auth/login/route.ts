@@ -5,6 +5,10 @@ import { signToken } from '@/lib/auth';
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
+/**
+ * Dedicated Admin Authentication Endpoint
+ * POST /api/admin/auth/login
+ */
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
@@ -12,7 +16,7 @@ export async function POST(req: NextRequest) {
 
     if (!email || typeof email !== 'string' || !EMAIL_REGEX.test(email.trim())) {
       return NextResponse.json(
-        { error: 'A valid email address is required.' },
+        { error: 'A valid administrator email address is required.' },
         { status: 400 }
       );
     }
@@ -30,15 +34,15 @@ export async function POST(req: NextRequest) {
     const user = await prisma.user.findUnique({ where: { email: cleanEmail } });
     if (!user) {
       return NextResponse.json(
-        { error: 'Invalid email or password.' },
+        { error: 'Invalid admin credentials.' },
         { status: 401 }
       );
     }
 
-    // Customer route validation: Reject ADMIN accounts
-    if (user.role === 'ADMIN') {
+    // Admin validation: Strict role requirement
+    if (user.role !== 'ADMIN') {
       return NextResponse.json(
-        { error: 'Admin accounts cannot log in through the customer endpoint. Please use the Admin Portal.' },
+        { error: 'Access Denied: Customer accounts are not permitted on the Admin portal.' },
         { status: 403 }
       );
     }
@@ -47,7 +51,7 @@ export async function POST(req: NextRequest) {
     const isValid = await bcrypt.compare(password, user.password);
     if (!isValid) {
       return NextResponse.json(
-        { error: 'Invalid email or password.' },
+        { error: 'Invalid admin credentials.' },
         { status: 401 }
       );
     }
@@ -55,7 +59,7 @@ export async function POST(req: NextRequest) {
     const token = signToken({ userId: user.id, email: user.email, role: user.role });
 
     const response = NextResponse.json({
-      message: 'Login successful.',
+      message: 'Admin authentication successful.',
       user: { id: user.id, name: user.name, email: user.email, role: user.role },
       token,
     });
@@ -70,7 +74,7 @@ export async function POST(req: NextRequest) {
 
     return response;
   } catch (error) {
-    console.error('[AUTH/LOGIN]', error);
+    console.error('[ADMIN/AUTH/LOGIN]', error);
     return NextResponse.json({ error: 'Internal server error.' }, { status: 500 });
   }
 }

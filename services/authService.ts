@@ -29,6 +29,9 @@ export const authService = {
   login: (payload: LoginPayload) =>
     http.post<AuthResponse>('/api/auth/login', payload, { skipAuth: true }),
 
+  adminLogin: (payload: LoginPayload) =>
+    http.post<AuthResponse>('/api/admin/auth/login', payload, { skipAuth: true }),
+
   logout: () => http.post<{ message: string }>('/api/auth/logout'),
 
   me: () => http.get<{ user: User; token: string }>('/api/auth/me'),

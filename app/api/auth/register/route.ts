@@ -8,23 +8,34 @@ export async function POST(req: NextRequest) {
     const body = await req.json();
     const { name, email, password } = body;
 
+    const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
     // Validate required fields
-    if (!name || !email || !password) {
+    if (!name || typeof name !== 'string' || name.trim().length === 0) {
       return NextResponse.json(
-        { error: 'Name, email and password are required.' },
+        { error: 'Full name is required.' },
         { status: 400 }
       );
     }
 
-    if (password.length < 6) {
+    if (!email || !EMAIL_REGEX.test(email.trim())) {
+      return NextResponse.json(
+        { error: 'A valid email address is required.' },
+        { status: 400 }
+      );
+    }
+
+    if (!password || typeof password !== 'string' || password.length < 6) {
       return NextResponse.json(
         { error: 'Password must be at least 6 characters.' },
         { status: 400 }
       );
     }
 
+    const cleanEmail = email.trim().toLowerCase();
+
     // Check for duplicate email
-    const existing = await prisma.user.findUnique({ where: { email } });
+    const existing = await prisma.user.findUnique({ where: { email: cleanEmail } });
     if (existing) {
       return NextResponse.json(
         { error: 'An account with this email already exists.' },
@@ -32,10 +43,10 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Hash password and create user
+    // Public registration ALWAYS creates CUSTOMER accounts for security
     const hashedPassword = await bcrypt.hash(password, 10);
     const user = await prisma.user.create({
-      data: { name, email, password: hashedPassword, role: 'CUSTOMER' },
+      data: { name: name.trim(), email: cleanEmail, password: hashedPassword, role: 'CUSTOMER' },
       select: { id: true, name: true, email: true, role: true, createdAt: true },
     });
 
