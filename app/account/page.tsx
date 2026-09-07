@@ -4,10 +4,11 @@ import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useSearchParams, useRouter } from 'next/navigation';
-import { useAuthStore } from '@/store/authStore';
+import { useAuthStore, getInMemoryToken } from '@/store/authStore';
 import { useUIStore } from '@/store/uiStore';
 import { useWishlistStore } from '@/store/wishlistStore';
 import { ProductCard } from '@/components/product/ProductCard';
+import type { Order } from '@/types';
 
 export default function AccountPage() {
   const searchParams = useSearchParams();
@@ -18,6 +19,9 @@ export default function AccountPage() {
     initialTab === 'orders' ? 'orders' : initialTab === 'profile' ? 'profile' : 'wishlist'
   );
 
+  const [orders, setOrders] = useState<Order[]>([]);
+  const [loadingOrders, setLoadingOrders] = useState(false);
+
   const { user } = useAuthStore();
   const { openModal, addToast } = useUIStore();
   const { items: wishlistItems, removeItem, fetchWishlist } = useWishlistStore();
@@ -25,6 +29,28 @@ export default function AccountPage() {
   useEffect(() => {
     if (user) {
       fetchWishlist();
+
+      // Fetch DB Orders
+      async function fetchUserOrders() {
+        setLoadingOrders(true);
+        try {
+          const token = getInMemoryToken();
+          if (!token) return;
+          const res = await fetch('/api/orders', {
+            headers: { Authorization: `Bearer ${token}` },
+          });
+          if (res.ok) {
+            const data = await res.json();
+            setOrders(data.orders || []);
+          }
+        } catch (err) {
+          console.error('Failed to fetch user orders from DB:', err);
+        } finally {
+          setLoadingOrders(false);
+        }
+      }
+
+      fetchUserOrders();
     }
   }, [user, fetchWishlist]);
 
@@ -179,18 +205,73 @@ export default function AccountPage() {
 
             {/* TAB CONTENT: ORDERS */}
             {activeTab === 'orders' && (
-              <div className="bg-[#E8DDCE]/50 rounded-3xl p-10 border border-[#D7B982]/40 text-center space-y-4">
-                <div className="text-4xl text-[#4A1724]">📦</div>
-                <h3 className="font-serif text-xl font-bold text-[#4A1724]">My Orders & Bespoke Requests</h3>
-                <p className="text-xs text-[#21191A]/70 max-w-md mx-auto font-light">
-                  You currently have no active or completed orders. Orders placed online or through our boutique concierges will appear here.
-                </p>
-                <Link
-                  href="/catalog"
-                  className="inline-block px-8 py-3 rounded-full bg-[#4A1724] text-[#F6F0E6] text-xs font-bold uppercase tracking-widest hover:bg-[#D7B982] hover:text-[#4A1724] transition-all shadow"
-                >
-                  START SHOPPING →
-                </Link>
+              <div className="space-y-6">
+                <div className="flex items-center justify-between">
+                  <h2 className="font-serif text-2xl font-bold text-[#4A1724]">
+                    My Orders ({orders.length})
+                  </h2>
+                </div>
+
+                {orders.length === 0 ? (
+                  <div className="bg-[#E8DDCE]/50 rounded-3xl p-10 border border-[#D7B982]/40 text-center space-y-4">
+                    <div className="text-4xl text-[#4A1724]">📦</div>
+                    <h3 className="font-serif text-xl font-bold text-[#4A1724]">No Orders Yet</h3>
+                    <p className="text-xs text-[#21191A]/70 max-w-md mx-auto font-light">
+                      You currently have no active or completed orders in the database. Orders placed online will appear here with live tracking.
+                    </p>
+                    <Link
+                      href="/catalog"
+                      className="inline-block px-8 py-3 rounded-full bg-[#4A1724] text-[#F6F0E6] text-xs font-bold uppercase tracking-widest hover:bg-[#D7B982] hover:text-[#4A1724] transition-all shadow"
+                    >
+                      START SHOPPING →
+                    </Link>
+                  </div>
+                ) : (
+                  <div className="space-y-4">
+                    {orders.map((ord) => (
+                      <div
+                        key={ord.id}
+                        className="bg-[#E8DDCE]/50 rounded-2xl p-6 border border-[#D7B982]/40 space-y-4 shadow-sm"
+                      >
+                        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-[#D7B982]/30 pb-4 text-xs">
+                          <div>
+                            <span className="text-[10px] text-[#69705A] uppercase tracking-wider font-mono">ORDER ID</span>
+                            <p className="font-bold text-[#4A1724] text-sm">{ord.orderNumber}</p>
+                          </div>
+                          <div>
+                            <span className="text-[10px] text-[#69705A] uppercase tracking-wider font-mono">DATE</span>
+                            <p className="font-bold text-[#21191A]">{new Date(ord.createdAt).toLocaleDateString()}</p>
+                          </div>
+                          <div>
+                            <span className="text-[10px] text-[#69705A] uppercase tracking-wider font-mono">STATUS</span>
+                            <span className="inline-block px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 font-bold text-[10px] uppercase">
+                              ✓ {ord.orderStatus}
+                            </span>
+                          </div>
+                          <div>
+                            <span className="text-[10px] text-[#69705A] uppercase tracking-wider font-mono">TOTAL</span>
+                            <p className="font-bold text-[#4A1724] text-sm">₹ {ord.total.toLocaleString('en-IN')}</p>
+                          </div>
+                        </div>
+
+                        <div className="space-y-2">
+                          <p className="text-[10px] uppercase tracking-widest text-[#B98282] font-bold">PURCHASED SILHOUETTES</p>
+                          <div className="space-y-1">
+                            {ord.items?.map((item: any, i: number) => (
+                              <div key={i} className="flex justify-between items-center text-xs py-1 border-b border-[#D7B982]/20">
+                                <div>
+                                  <span className="font-bold text-[#21191A]">{item.productName}</span>
+                                  <span className="text-[10px] text-[#69705A] ml-2 font-mono">Size: {item.size} • Qty: {item.quantity}</span>
+                                </div>
+                                <span className="font-bold text-[#4A1724]">₹ {(item.purchasePrice * item.quantity).toLocaleString('en-IN')}</span>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
             )}
 

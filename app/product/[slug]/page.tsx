@@ -6,9 +6,11 @@ import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import { productService } from '@/services/productService';
 import type { Product } from '@/types';
+import { ProductCard } from '@/components/product/ProductCard';
 import { useUIStore } from '@/store/uiStore';
 import { useAuthStore } from '@/store/authStore';
 import { useWishlistStore } from '@/store/wishlistStore';
+import { useCartStore } from '@/store/cartStore';
 
 export default function ProductDetailPage() {
   const params = useParams();
@@ -26,6 +28,7 @@ export default function ProductDetailPage() {
   const { addToast, openModal } = useUIStore();
   const { user } = useAuthStore();
   const { toggleWishlist, isInWishlist } = useWishlistStore();
+  const { addItem } = useCartStore();
 
   const isSaved = product ? isInWishlist(product.id) : false;
 
@@ -69,6 +72,16 @@ export default function ProductDetailPage() {
 
   const handleAddToCart = () => {
     if (!product) return;
+    addItem({
+      productId: product.id,
+      name: product.name,
+      slug: product.slug,
+      price: product.price,
+      image: product.images?.[0] || '/images/hero_palace.jpg',
+      size: selectedSize,
+      quantity: qty,
+      fabric: product.fabric,
+    });
     addToast(`Added ${qty}x "${product.name}" (Size: ${selectedSize}) to your bag 🛍️`, 'success');
   };
 
@@ -357,22 +370,7 @@ export default function ProductDetailPage() {
 
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-5">
               {relatedProducts.map((item) => (
-                <Link
-                  key={item.id}
-                  href={`/product/${item.slug || item.id}`}
-                  className="bg-[#E8DDCE]/30 p-3 rounded-2xl border border-[#D7B982]/30 space-y-2 flex flex-col justify-between group hover:border-[#D7B982] hover:shadow-md transition-all"
-                >
-                  <div className="relative aspect-[3/4] w-full rounded-xl overflow-hidden bg-[#E8DDCE]">
-                    <Image src={item.images[0] || '/images/hero_palace.jpg'} alt={item.name} fill className="object-cover group-hover:scale-105 transition-transform" />
-                  </div>
-                  <div className="space-y-0.5">
-                    <span className="text-[9px] uppercase tracking-widest text-[#B98282] font-bold block truncate">
-                      {item.fabric || 'Heritage Piece'}
-                    </span>
-                    <h3 className="font-serif text-xs font-bold text-[#21191A] truncate">{item.name}</h3>
-                    <p className="text-xs font-bold text-[#4A1724]">₹ {item.price.toLocaleString('en-IN')}</p>
-                  </div>
-                </Link>
+                <ProductCard key={item.id} product={item} />
               ))}
             </div>
           </section>

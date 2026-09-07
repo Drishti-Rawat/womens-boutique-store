@@ -6,6 +6,7 @@ import type { Product } from '@/types';
 import { useUIStore } from '@/store/uiStore';
 import { useAuthStore } from '@/store/authStore';
 import { useWishlistStore } from '@/store/wishlistStore';
+import { useCartStore } from '@/store/cartStore';
 
 interface ProductCardProps {
   product: Product;
@@ -17,6 +18,7 @@ export function ProductCard({ product, tag, isWishlistPage = false }: ProductCar
   const { addToast, openModal } = useUIStore();
   const { user } = useAuthStore();
   const { toggleWishlist, isInWishlist } = useWishlistStore();
+  const { addItem } = useCartStore();
 
   const isSaved = isInWishlist(product.id);
   const displayTag = tag || (product.isFeatured ? 'BESTSELLER' : null);
@@ -30,6 +32,16 @@ export function ProductCard({ product, tag, isWishlistPage = false }: ProductCar
   const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
+    addItem({
+      productId: product.id,
+      name: product.name,
+      slug: product.slug,
+      price: product.price,
+      image: product.images?.[0] || '/images/hero_palace.jpg',
+      size: 'M',
+      quantity: 1,
+      fabric: product.fabric,
+    });
     addToast(`Added "${product.name}" to shopping bag!`, 'success');
   };
 

@@ -4,6 +4,7 @@ import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useUIStore } from '@/store/uiStore';
+import { useCartStore } from '@/store/cartStore';
 
 interface FeaturedProduct {
   name: string;
@@ -203,6 +204,7 @@ export default function JournalPage() {
   const [savedArticles, setSavedArticles] = useState<string[]>([]);
   
   const addToast = useUIStore((state) => state.addToast);
+  const { addItem } = useCartStore();
 
   const categories = ['All', 'Heritage & Craft', 'Style & Draping', 'Atelier Stories', 'Royal Archives', 'Sustainability'];
 
@@ -654,7 +656,19 @@ export default function JournalPage() {
                               VIEW DETAILS
                             </Link>
                             <button
-                              onClick={() => addToast(`Added "${prod.name}" to shopping bag!`, 'success')}
+                              onClick={() => {
+                                addItem({
+                                  productId: prod.slug,
+                                  name: prod.name,
+                                  slug: prod.slug,
+                                  price: prod.price,
+                                  image: prod.img,
+                                  size: 'M',
+                                  quantity: 1,
+                                  fabric: prod.fabric,
+                                });
+                                addToast(`Added "${prod.name}" to shopping bag!`, 'success');
+                              }}
                               className="text-[10px] font-bold bg-[#4A1724] text-[#F6F0E6] px-2.5 py-0.5 rounded-full uppercase hover:bg-[#D7B982] hover:text-[#4A1724] transition-all"
                             >
                               ADD +

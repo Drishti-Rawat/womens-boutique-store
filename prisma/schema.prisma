@@ -36,16 +36,22 @@ enum PaymentStatus {
 }
 
 model User {
-  id        String   @id @default(uuid())
-  name      String
-  email     String   @unique
-  password  String
-  role      Role     @default(CUSTOMER)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  orders    Order[]
-  carts     Cart[]
-  wishlistItems WishlistItem[]
+  id              String   @id @default(uuid())
+  name            String
+  email           String   @unique
+  password        String
+  role            Role     @default(CUSTOMER)
+  // Saved delivery address (auto-filled on checkout)
+  savedPhone      String?
+  savedAddress    String?
+  savedCity       String?
+  savedState      String?
+  savedPincode    String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  orders          Order[]
+  carts           Cart[]
+  wishlistItems   WishlistItem[]
 }
 
 model Category {

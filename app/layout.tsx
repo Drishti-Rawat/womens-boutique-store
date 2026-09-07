@@ -5,6 +5,7 @@ import { Header } from '@/components/layout/Header';
 import { LoginModal } from '@/components/auth/LoginModal';
 import { RegisterModal } from '@/components/auth/RegisterModal';
 import { ToastContainer } from '@/components/ui/ToastContainer';
+import { CartDrawer } from '@/components/cart/CartDrawer';
 
 export const metadata: Metadata = {
   title: 'NOORÉ — House of Indian Elegance & AI Stylist',
@@ -32,6 +33,7 @@ export default function RootLayout({
           <main className="flex-1">{children}</main>
           <LoginModal />
           <RegisterModal />
+          <CartDrawer />
           <ToastContainer />
         </AuthProvider>
       </body>

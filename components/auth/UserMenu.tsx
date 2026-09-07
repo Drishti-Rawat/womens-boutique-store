@@ -3,12 +3,16 @@
 import { useState, useRef, useEffect } from 'react';
 import { useAuthStore } from '@/store/authStore';
 import { useUIStore } from '@/store/uiStore';
+import { useCartStore } from '@/store/cartStore';
+import { useWishlistStore } from '@/store/wishlistStore';
 import { authService } from '@/services/authService';
 import Link from 'next/link';
 
 export function UserMenu() {
   const { user, isLoading, clearAuth } = useAuthStore();
   const { openModal, addToast } = useUIStore();
+  const { clearCart } = useCartStore();
+  const { clearWishlist } = useWishlistStore();
   const [isOpen, setIsOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
@@ -30,6 +34,8 @@ export function UserMenu() {
       // Ignore network errors on logout
     } finally {
       clearAuth();
+      clearCart();       // Reset in-memory cart counts to 0
+      clearWishlist();   // Reset in-memory wishlist counts to 0
       setIsOpen(false);
       addToast('Signed out successfully.', 'info');
     }

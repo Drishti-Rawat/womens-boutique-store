@@ -6,12 +6,16 @@ import { UserMenu } from '@/components/auth/UserMenu';
 import { useUIStore } from '@/store/uiStore';
 import { useAuthStore } from '@/store/authStore';
 import { useWishlistStore } from '@/store/wishlistStore';
+import { useCartStore } from '@/store/cartStore';
 
 export function Header() {
   const router = useRouter();
   const { openModal, addToast } = useUIStore();
   const { user } = useAuthStore();
   const { items: wishlistItems } = useWishlistStore();
+  const { openCart, getTotalItems, isSyncing } = useCartStore();
+
+  const totalBagItems = getTotalItems();
 
   const handleWishlistClick = () => {
     if (!user) {
@@ -142,11 +146,20 @@ export function Header() {
             </button>
 
             {/* Bag */}
-            <button className="relative hover:text-[#4A1724] transition-colors flex items-center gap-1.5" aria-label="Bag">
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <button
+              onClick={openCart}
+              className="relative hover:text-[#4A1724] transition-colors flex items-center gap-1.5"
+              aria-label="Bag"
+            >
+              {isSyncing && (
+                <span className="absolute -top-1 -right-1 w-2 h-2 bg-[#D7B982] rounded-full animate-pulse" />
+              )}
+              <svg className={`w-4 h-4 ${totalBagItems > 0 ? 'text-[#4A1724]' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
               </svg>
-              <span className="text-xs font-semibold">(0)</span>
+              <span className={`text-xs font-semibold ${totalBagItems > 0 ? 'text-[#4A1724] font-bold' : ''}`}>
+                ({totalBagItems})
+              </span>
             </button>
 
             {/* User Account */}

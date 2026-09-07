@@ -3,6 +3,8 @@
 import { useState } from 'react';
 import { useUIStore } from '@/store/uiStore';
 import { useAuthStore } from '@/store/authStore';
+import { useCartStore } from '@/store/cartStore';
+import { useWishlistStore } from '@/store/wishlistStore';
 import { authService } from '@/services/authService';
 
 export function RegisterModal() {
@@ -12,6 +14,8 @@ export function RegisterModal() {
   const addToast = useUIStore((state) => state.addToast);
 
   const setAuth = useAuthStore((state) => state.setAuth);
+  const { fetchCartFromDB } = useCartStore();
+  const { fetchWishlist } = useWishlistStore();
 
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -35,6 +39,8 @@ export function RegisterModal() {
     try {
       const res = await authService.register({ name, email, password });
       setAuth(res.user, res.token);
+      // Fetch persistent data from DB after registration
+      await Promise.all([fetchCartFromDB(), fetchWishlist()]);
       addToast(`Account created! Welcome to NOORÉ, ${res.user.name}.`, 'success');
       closeModal();
       setName('');
