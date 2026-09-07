@@ -2,42 +2,136 @@
 
 import Link from 'next/link';
 import { UserMenu } from '@/components/auth/UserMenu';
+import { useUIStore } from '@/store/uiStore';
 
 export function Header() {
+  const { openModal } = useUIStore();
+
   return (
-    <header className="sticky top-0 z-40 w-full bg-stone-950/90 backdrop-blur-md border-b border-amber-500/20 text-stone-100">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
-        {/* Brand Logo */}
-        <Link href="/" className="flex flex-col items-start group">
-          <span className="text-2xl font-serif tracking-wider font-bold text-transparent bg-clip-text bg-gradient-to-r from-amber-200 via-yellow-400 to-amber-500 group-hover:opacity-90 transition-opacity">
-            ROOPKALA ROYALE
-          </span>
-          <span className="text-[9px] uppercase tracking-[0.3em] text-amber-500/80 font-medium">
-            Boutique &amp; Haute Couture
-          </span>
-        </Link>
-
-        {/* Navigation */}
-        <nav className="hidden md:flex items-center gap-8 text-xs uppercase tracking-widest font-medium text-stone-300">
-          <Link href="/catalog" className="hover:text-amber-400 transition-colors">
-            Collections
-          </Link>
-          <Link href="/catalog?category=sarees" className="hover:text-amber-400 transition-colors">
-            Heritage Sarees
-          </Link>
-          <Link href="/catalog?category=lehengas" className="hover:text-amber-400 transition-colors">
-            Royal Lehengas
-          </Link>
-          <Link href="/catalog?category=couture" className="hover:text-amber-400 transition-colors">
-            Couture
-          </Link>
-        </nav>
-
-        {/* Right Action Menu */}
-        <div className="flex items-center gap-4">
-          <UserMenu />
+    <>
+      {/* Top Announcement Bar - Deep Burgundy #4A1724 */}
+      <div className="w-full bg-[#4A1724] text-[#D7B982] text-[11px] font-medium tracking-widest py-2 px-6 uppercase border-b border-[#D7B982]/20 flex items-center justify-between">
+        <div className="mx-auto flex items-center gap-3 text-[10px]">
+          <span>COMPLIMENTARY SHIPPING ON ORDERS ABOVE ₹5,000</span>
+          <span>|</span>
+          <span>EASY RETURNS</span>
+          <span>|</span>
+          <span>CRAFTED IN INDIA</span>
         </div>
+        <span className="hidden md:inline text-[10px] text-[#D7B982]/80 tracking-widest">
+          A MORE BEAUTIFUL TOMORROW
+        </span>
       </div>
-    </header>
+
+      {/* Main Header - Antique Ivory #F6F0E6 */}
+      <header className="sticky top-0 z-40 w-full bg-[#F6F0E6]/95 backdrop-blur-md border-b border-[#D7B982]/30 text-[#21191A] shadow-sm">
+        <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+          {/* Left Navigation */}
+          <nav className="hidden lg:flex items-center gap-7 text-xs uppercase tracking-[0.2em] font-medium text-[#21191A]/80">
+            {/* COLLECTIONS Mega Menu Dropdown */}
+            <div className="relative group py-2">
+              <Link href="/catalog" className="hover:text-[#4A1724] transition-colors flex items-center gap-1">
+                <span>COLLECTIONS</span>
+                <span className="text-[9px]">▼</span>
+              </Link>
+
+              {/* Dropdown Card */}
+              <div className="absolute top-full left-0 hidden group-hover:block w-[600px] bg-[#F6F0E6] text-[#21191A] p-6 rounded-2xl shadow-2xl border border-[#D7B982]/40 z-50 animate-in fade-in slide-in-from-top-2 duration-200">
+                <div className="grid grid-cols-3 gap-6 text-xs">
+                  {/* Col 1 */}
+                  <div className="space-y-3">
+                    <p className="font-serif font-bold text-[#4A1724] uppercase tracking-wider text-[10px] border-b border-[#D7B982]/30 pb-1.5">
+                      BY CATEGORY
+                    </p>
+                    <ul className="space-y-2 text-[#21191A]/80 font-medium">
+                      <li><Link href="/catalog?category=sarees" className="hover:text-[#4A1724] hover:underline transition-colors block">Heritage Sarees</Link></li>
+                      <li><Link href="/catalog?category=lehengas" className="hover:text-[#4A1724] hover:underline transition-colors block">Royal Lehengas</Link></li>
+                      <li><Link href="/catalog?category=anarkalis" className="hover:text-[#4A1724] hover:underline transition-colors block">Anarkalis & Kurtas</Link></li>
+                      <li><Link href="/catalog?category=co-ords" className="hover:text-[#4A1724] hover:underline transition-colors block">Couture Co-ords</Link></li>
+                      <li><Link href="/catalog?category=accessories" className="hover:text-[#4A1724] hover:underline transition-colors block">Accessories</Link></li>
+                    </ul>
+                  </div>
+
+                  {/* Col 2 */}
+                  <div className="space-y-3">
+                    <p className="font-serif font-bold text-[#4A1724] uppercase tracking-wider text-[10px] border-b border-[#D7B982]/30 pb-1.5">
+                      CURATED EDITS
+                    </p>
+                    <ul className="space-y-2 text-[#21191A]/80 font-medium">
+                      <li><Link href="/catalog?category=sarees" className="hover:text-[#4A1724] hover:underline transition-colors block">The Heritage Edit</Link></li>
+                      <li><Link href="/catalog?category=lehengas" className="hover:text-[#4A1724] hover:underline transition-colors block">After Dark</Link></li>
+                      <li><Link href="/catalog?category=co-ords" className="hover:text-[#4A1724] hover:underline transition-colors block">Modern Heirlooms</Link></li>
+                      <li><Link href="/catalog?featured=true" className="hover:text-[#4A1724] hover:underline transition-colors block">Bestsellers</Link></li>
+                    </ul>
+                  </div>
+
+                  {/* Col 3 */}
+                  <div className="bg-[#E8DDCE]/60 p-4 rounded-xl border border-[#D7B982]/30 space-y-2 text-center flex flex-col justify-between">
+                    <div className="w-8 h-8 rounded-full border border-[#D7B982] flex items-center justify-center text-[#4A1724] text-xs mx-auto">
+                      ❀
+                    </div>
+                    <div>
+                      <p className="font-serif font-bold text-sm text-[#4A1724]">Banarasi Silk</p>
+                      <p className="text-[10px] text-[#21191A]/70 font-light">Handwoven in Varanasi</p>
+                    </div>
+                    <Link href="/catalog?category=sarees" className="text-[9px] uppercase font-bold text-[#4A1724] tracking-widest hover:underline block pt-1">
+                      EXPLORE →
+                    </Link>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <Link href="/catalog?featured=true" className="hover:text-[#4A1724] transition-colors py-2">
+              THE EDIT
+            </Link>
+            <Link href="/journal" className="hover:text-[#4A1724] transition-colors py-2">
+              JOURNAL
+            </Link>
+            <Link href="/about" className="hover:text-[#4A1724] transition-colors py-2">
+              OUR STORY
+            </Link>
+          </nav>
+
+          {/* Center Brand Logo */}
+          <Link href="/" className="flex flex-col items-center group py-1">
+            <span className="font-serif text-3xl font-bold tracking-[0.15em] text-[#4A1724] group-hover:text-[#69705A] transition-colors">
+              NOORÉ
+            </span>
+            <span className="text-[8px] uppercase tracking-[0.35em] text-[#D7B982] font-bold">
+              WEAR YOUR STORY
+            </span>
+          </Link>
+
+          {/* Right Controls */}
+          <div className="flex items-center gap-5 text-[#21191A]">
+            {/* Search */}
+            <button className="hover:text-[#4A1724] transition-colors" aria-label="Search">
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              </svg>
+            </button>
+
+            {/* Wishlist */}
+            <button className="hover:text-[#4A1724] transition-colors" aria-label="Wishlist">
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+              </svg>
+            </button>
+
+            {/* Bag */}
+            <button className="relative hover:text-[#4A1724] transition-colors flex items-center gap-1.5" aria-label="Bag">
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+              </svg>
+              <span className="text-xs font-semibold">(0)</span>
+            </button>
+
+            {/* User Account */}
+            <UserMenu />
+          </div>
+        </div>
+      </header>
+    </>
   );
 }

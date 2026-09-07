@@ -35,7 +35,7 @@ export function RegisterModal() {
     try {
       const res = await authService.register({ name, email, password });
       setAuth(res.user, res.token);
-      addToast(`Account created! Welcome, ${res.user.name}.`, 'success');
+      addToast(`Account created! Welcome to NOORÉ, ${res.user.name}.`, 'success');
       closeModal();
       setName('');
       setEmail('');
@@ -51,11 +51,11 @@ export function RegisterModal() {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-md animate-fade-in">
-      <div className="relative w-full max-w-md bg-stone-900 border border-amber-500/30 rounded-2xl p-8 shadow-2xl text-stone-100">
+      <div className="relative w-full max-w-md bg-[#F6F0E6] border border-[#D7B982]/50 rounded-2xl p-8 shadow-2xl text-[#21191A]">
         {/* Close Button */}
         <button
           onClick={closeModal}
-          className="absolute top-5 right-5 text-stone-400 hover:text-amber-400 text-xl transition-colors"
+          className="absolute top-5 right-5 text-[#21191A]/60 hover:text-[#4A1724] text-xl transition-colors"
           aria-label="Close"
         >
           ✕
@@ -63,18 +63,18 @@ export function RegisterModal() {
 
         {/* Header */}
         <div className="text-center mb-6">
-          <p className="text-xs uppercase tracking-widest text-amber-500 font-semibold mb-1">
-            Join Roopkala Royale
+          <p className="text-[10px] uppercase tracking-[0.3em] text-[#D7B982] font-bold mb-1">
+            JOIN THE NOORÉ CIRCLE
           </p>
-          <h2 className="text-2xl font-serif text-amber-200">Create Your Privilege Account</h2>
-          <p className="text-xs text-stone-400 mt-1">
+          <h2 className="text-3xl font-serif font-bold text-[#4A1724]">Create Privilege Account</h2>
+          <p className="text-xs text-[#21191A]/70 mt-1 font-light">
             Unlock personalized couture recommendations and seamless checkout.
           </p>
         </div>
 
         {/* Error Alert */}
         {error && (
-          <div className="mb-4 p-3 rounded-lg bg-rose-950/60 border border-rose-600/40 text-rose-300 text-xs text-center">
+          <div className="mb-4 p-3 rounded-lg bg-rose-950/80 border border-rose-600/40 text-rose-200 text-xs text-center font-medium">
             {error}
           </div>
         )}
@@ -82,7 +82,7 @@ export function RegisterModal() {
         {/* Form */}
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-xs uppercase tracking-wider text-stone-300 mb-1 font-medium">
+            <label className="block text-xs uppercase tracking-wider text-[#21191A] mb-1 font-semibold">
               Full Name
             </label>
             <input
@@ -91,12 +91,12 @@ export function RegisterModal() {
               value={name}
               onChange={(e) => setName(e.target.value)}
               placeholder="e.g. Maharani Gayatri"
-              className="w-full px-4 py-3 rounded-lg bg-stone-950 border border-stone-700 text-stone-100 placeholder-stone-500 focus:outline-none focus:border-amber-500 transition-colors text-sm"
+              className="w-full px-4 py-3 rounded-xl bg-[#E8DDCE] border border-[#D7B982]/50 text-[#21191A] placeholder-[#21191A]/40 focus:outline-none focus:border-[#4A1724] transition-colors text-sm"
             />
           </div>
 
           <div>
-            <label className="block text-xs uppercase tracking-wider text-stone-300 mb-1 font-medium">
+            <label className="block text-xs uppercase tracking-wider text-[#21191A] mb-1 font-semibold">
               Email Address
             </label>
             <input
@@ -105,12 +105,12 @@ export function RegisterModal() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="e.g. gayatri@royale.in"
-              className="w-full px-4 py-3 rounded-lg bg-stone-950 border border-stone-700 text-stone-100 placeholder-stone-500 focus:outline-none focus:border-amber-500 transition-colors text-sm"
+              className="w-full px-4 py-3 rounded-xl bg-[#E8DDCE] border border-[#D7B982]/50 text-[#21191A] placeholder-[#21191A]/40 focus:outline-none focus:border-[#4A1724] transition-colors text-sm"
             />
           </div>
 
           <div>
-            <label className="block text-xs uppercase tracking-wider text-stone-300 mb-1 font-medium">
+            <label className="block text-xs uppercase tracking-wider text-[#21191A] mb-1 font-semibold">
               Password
             </label>
             <input
@@ -120,25 +120,25 @@ export function RegisterModal() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="At least 6 characters"
-              className="w-full px-4 py-3 rounded-lg bg-stone-950 border border-stone-700 text-stone-100 placeholder-stone-500 focus:outline-none focus:border-amber-500 transition-colors text-sm"
+              className="w-full px-4 py-3 rounded-xl bg-[#E8DDCE] border border-[#D7B982]/50 text-[#21191A] placeholder-[#21191A]/40 focus:outline-none focus:border-[#4A1724] transition-colors text-sm"
             />
           </div>
 
           <button
             type="submit"
             disabled={isSubmitting}
-            className="w-full py-3.5 mt-2 rounded-lg bg-gradient-to-r from-amber-600 via-amber-500 to-amber-700 hover:from-amber-500 hover:to-amber-600 text-stone-950 font-semibold tracking-wide text-sm transition-all duration-200 shadow-lg shadow-amber-900/30 disabled:opacity-50"
+            className="w-full py-3.5 mt-2 rounded-full bg-[#4A1724] hover:bg-[#331019] text-[#F6F0E6] font-bold tracking-widest text-xs uppercase transition-all duration-200 shadow-xl shadow-[#4A1724]/20 border border-[#D7B982]/40 disabled:opacity-50"
           >
             {isSubmitting ? 'Creating Account...' : 'Create Account'}
           </button>
         </form>
 
         {/* Footer Link */}
-        <div className="mt-6 text-center text-xs text-stone-400 border-t border-stone-800 pt-4">
-          Already a Royale member?{' '}
+        <div className="mt-6 text-center text-xs text-[#21191A]/70 border-t border-[#D7B982]/30 pt-4">
+          Already a NOORÉ member?{' '}
           <button
             onClick={() => openModal('login')}
-            className="text-amber-400 hover:text-amber-300 font-semibold underline underline-offset-4 ml-1"
+            className="text-[#4A1724] hover:text-[#69705A] font-bold underline underline-offset-4 ml-1"
           >
             Sign In
           </button>

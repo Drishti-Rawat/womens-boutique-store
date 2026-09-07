@@ -37,24 +37,24 @@ export function UserMenu() {
 
   if (isLoading) {
     return (
-      <div className="h-9 w-24 bg-stone-800 animate-pulse rounded-full border border-stone-700" />
+      <div className="h-9 w-24 bg-[#E8DDCE] animate-pulse rounded-full border border-[#D7B982]/30" />
     );
   }
 
   if (!user) {
     return (
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-2">
         <button
           onClick={() => openModal('login')}
-          className="text-xs uppercase tracking-wider text-amber-200 hover:text-amber-400 font-medium transition-colors py-2 px-3"
+          className="text-xs uppercase tracking-wider text-[#21191A] hover:text-[#4A1724] font-semibold transition-colors py-2 px-3"
         >
           Sign In
         </button>
         <button
           onClick={() => openModal('register')}
-          className="text-xs uppercase tracking-wider bg-gradient-to-r from-amber-600 to-amber-700 hover:from-amber-500 hover:to-amber-600 text-stone-950 font-bold px-4 py-2 rounded-full transition-all shadow-md shadow-amber-900/20"
+          className="text-xs uppercase tracking-wider bg-[#4A1724] hover:bg-[#331019] text-[#F6F0E6] font-bold px-4 py-2 rounded-full transition-all shadow-md shadow-[#4A1724]/20 border border-[#D7B982]/40"
         >
-          Join Privilege
+          Join
         </button>
       </div>
     );
@@ -64,27 +64,27 @@ export function UserMenu() {
     <div className="relative" ref={menuRef}>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-stone-900 border border-amber-500/30 hover:border-amber-400/60 transition-all text-amber-200"
+        className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#E8DDCE] border border-[#D7B982]/50 hover:border-[#4A1724] transition-all text-[#21191A]"
       >
-        <div className="w-7 h-7 rounded-full bg-gradient-to-tr from-amber-700 to-yellow-500 flex items-center justify-center text-stone-950 font-bold text-xs uppercase shadow">
+        <div className="w-7 h-7 rounded-full bg-[#4A1724] text-[#F6F0E6] font-bold flex items-center justify-center text-xs uppercase shadow">
           {user.name.charAt(0)}
         </div>
-        <span className="text-xs font-medium tracking-wide max-w-[100px] truncate">
+        <span className="text-xs font-semibold tracking-wide max-w-[100px] truncate">
           {user.name}
         </span>
         {user.role === 'ADMIN' && (
-          <span className="bg-amber-500/20 text-amber-300 text-[9px] font-bold px-1.5 py-0.5 rounded border border-amber-500/30 uppercase">
+          <span className="bg-[#4A1724]/10 text-[#4A1724] text-[9px] font-bold px-1.5 py-0.5 rounded border border-[#4A1724]/30 uppercase">
             Admin
           </span>
         )}
-        <span className="text-stone-400 text-xs">▾</span>
+        <span className="text-[#21191A]/60 text-xs">▾</span>
       </button>
 
       {isOpen && (
-        <div className="absolute right-0 mt-2 w-56 rounded-xl bg-stone-900 border border-amber-500/30 shadow-2xl p-2 z-50 text-stone-200 text-xs animate-fade-in backdrop-blur-lg">
-          <div className="px-3 py-2 border-b border-stone-800">
-            <p className="font-semibold text-amber-200 truncate">{user.name}</p>
-            <p className="text-[11px] text-stone-400 truncate">{user.email}</p>
+        <div className="absolute right-0 mt-2 w-56 rounded-2xl bg-[#F6F0E6] border border-[#D7B982]/50 shadow-2xl p-2 z-50 text-[#21191A] text-xs animate-fade-in backdrop-blur-lg">
+          <div className="px-3 py-2 border-b border-[#D7B982]/30">
+            <p className="font-serif font-bold text-[#4A1724] text-sm truncate">{user.name}</p>
+            <p className="text-[11px] text-[#21191A]/70 truncate">{user.email}</p>
           </div>
 
           <div className="py-1">
@@ -92,7 +92,7 @@ export function UserMenu() {
               <Link
                 href="/admin"
                 onClick={() => setIsOpen(false)}
-                className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-stone-800 text-amber-300 font-medium transition-colors"
+                className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-[#E8DDCE] text-[#4A1724] font-bold transition-colors"
               >
                 ⚙️ Admin Dashboard
               </Link>
@@ -101,16 +101,16 @@ export function UserMenu() {
             <Link
               href="/orders"
               onClick={() => setIsOpen(false)}
-              className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-stone-800 transition-colors text-stone-300"
+              className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-[#E8DDCE] transition-colors text-[#21191A]"
             >
               📦 My Orders
             </Link>
           </div>
 
-          <div className="border-t border-stone-800 pt-1">
+          <div className="border-t border-[#D7B982]/30 pt-1">
             <button
               onClick={handleLogout}
-              className="w-full text-left flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-rose-950/40 text-rose-300 transition-colors"
+              className="w-full text-left flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-rose-100 text-rose-800 font-semibold transition-colors"
             >
               🚪 Sign Out
             </button>

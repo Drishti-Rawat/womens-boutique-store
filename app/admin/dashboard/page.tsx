@@ -1,9 +1,5 @@
-const DashBoardPage = () => {
-    return (
-        <div>
-            <h1>Dashboard</h1>
-        </div>
-    );
-};
+import AdminDashboardPage from '../page';
 
-export default DashBoardPage;
+export default function DashboardRoute() {
+  return <AdminDashboardPage />;
+}
