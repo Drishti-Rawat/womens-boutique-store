@@ -5,7 +5,10 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { productService } from '@/services/productService';
 import type { Product } from '@/types';
+import { ProductCard } from '@/components/product/ProductCard';
 import { useUIStore } from '@/store/uiStore';
+import { useAuthStore } from '@/store/authStore';
+import { useWishlistStore } from '@/store/wishlistStore';
 
 // Default curated 4 hero items with artisan scarcity tags
 const MOCKUP_PRODUCTS = [
@@ -80,6 +83,8 @@ export default function Home() {
 
   const addToast = useUIStore((state) => state.addToast);
   const openModal = useUIStore((state) => state.openModal);
+  const { user } = useAuthStore();
+  const { toggleWishlist, isInWishlist } = useWishlistStore();
 
   useEffect(() => {
     async function fetchFeaturedProducts() {
@@ -113,7 +118,7 @@ export default function Home() {
     setAiInputText('');
   };
 
-  const displayProducts = (products.length > 0 ? products : MOCKUP_PRODUCTS).slice(0, 4);
+  const displayProducts = (products.length > 0 ? products : (MOCKUP_PRODUCTS as unknown as Product[])).slice(0, 4);
 
   return (
     <div className="min-h-screen bg-[#F6F0E6] text-[#21191A] font-sans antialiased selection:bg-[#4A1724] selection:text-[#F6F0E6] relative">
@@ -368,61 +373,7 @@ export default function Home() {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {displayProducts.map((product, idx) => {
               const tag = (product as unknown as { tag?: string }).tag || MOCKUP_PRODUCTS[idx % 4].tag;
-              const productSlug = product.slug || MOCKUP_PRODUCTS[idx % 4].slug;
-              return (
-                <Link
-                  key={product.id}
-                  href={`/product/${productSlug}`}
-                  className="group flex flex-col space-y-3 cursor-pointer"
-                >
-                  {/* 3:4 Portrait Image with Scarcity Tag */}
-                  <div className="relative aspect-[3/4] w-full overflow-hidden bg-[#E8DDCE] rounded-xl border border-[#D7B982]/30 shadow-md group-hover:border-[#D7B982] transition-all">
-                    <Image
-                      src={product.images[0] || '/images/hero_palace.jpg'}
-                      alt={product.name}
-                      fill
-                      className="object-cover object-center group-hover:scale-105 transition-transform duration-700"
-                    />
-                    
-                    {/* Top Scarcity Badge */}
-                    <div className="absolute top-3 left-3 bg-[#4A1724]/90 backdrop-blur-md text-[#D7B982] text-[9px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider border border-[#D7B982]/40 shadow">
-                      {tag}
-                    </div>
-
-                    <button
-                      onClick={(e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        addToast(`Saved "${product.name}" to Wishlist ♡`, 'info');
-                      }}
-                      className="absolute top-3 right-3 w-8 h-8 rounded-full bg-[#F6F0E6]/90 backdrop-blur-md flex items-center justify-center text-[#4A1724] hover:bg-[#4A1724] hover:text-[#F6F0E6] transition-colors text-xs shadow"
-                    >
-                      ♡
-                    </button>
-                  </div>
-
-                  <div className="space-y-1">
-                    <h3 className="font-serif text-base font-bold text-[#21191A] group-hover:text-[#4A1724] transition-colors">
-                      {product.name}
-                    </h3>
-                    <div className="flex items-center justify-between text-xs">
-                      <span className="font-bold text-[#4A1724]">
-                        ₹ {product.price.toLocaleString('en-IN')}
-                      </span>
-                      <button
-                        onClick={(e) => {
-                          e.preventDefault();
-                          e.stopPropagation();
-                          handleAddToCart(product.name);
-                        }}
-                        className="text-[10px] uppercase tracking-widest text-[#69705A] hover:text-[#4A1724] font-bold underline"
-                      >
-                        QUICK ADD +
-                      </button>
-                    </div>
-                  </div>
-                </Link>
-              );
+              return <ProductCard key={product.id} product={product} tag={tag} />;
             })}
           </div>
         )}

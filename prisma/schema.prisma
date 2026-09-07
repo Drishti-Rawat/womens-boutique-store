@@ -45,6 +45,7 @@ model User {
   updatedAt DateTime @updatedAt
   orders    Order[]
   carts     Cart[]
+  wishlistItems WishlistItem[]
 }
 
 model Category {
@@ -74,6 +75,7 @@ model Product {
   createdAt   DateTime         @default(now())
   updatedAt   DateTime         @updatedAt
   variants    ProductVariant[]
+  wishlistItems WishlistItem[]
 }
 
 model ProductVariant {
@@ -161,3 +163,15 @@ model OrderItem {
   purchasePrice Float
   quantity      Int
 }
+
+model WishlistItem {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  productId String
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@unique([userId, productId])
+}
+

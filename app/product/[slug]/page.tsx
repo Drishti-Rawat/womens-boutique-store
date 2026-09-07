@@ -7,6 +7,8 @@ import { useParams } from 'next/navigation';
 import { productService } from '@/services/productService';
 import type { Product } from '@/types';
 import { useUIStore } from '@/store/uiStore';
+import { useAuthStore } from '@/store/authStore';
+import { useWishlistStore } from '@/store/wishlistStore';
 
 export default function ProductDetailPage() {
   const params = useParams();
@@ -20,9 +22,12 @@ export default function ProductDetailPage() {
   const [activeImgIndex, setActiveImgIndex] = useState(0);
   const [selectedSize, setSelectedSize] = useState('M');
   const [qty, setQty] = useState(1);
-  const [wishlist, setWishlist] = useState(false);
 
-  const addToast = useUIStore((state) => state.addToast);
+  const { addToast, openModal } = useUIStore();
+  const { user } = useAuthStore();
+  const { toggleWishlist, isInWishlist } = useWishlistStore();
+
+  const isSaved = product ? isInWishlist(product.id) : false;
 
   // Fetch product data from DB
   useEffect(() => {
@@ -288,14 +293,14 @@ export default function ProductDetailPage() {
 
                 <button
                   onClick={() => {
-                    setWishlist(!wishlist);
-                    addToast(wishlist ? 'Removed from Wishlist' : 'Saved to Wishlist ♡', 'info');
+                    if (product) toggleWishlist(product, user, openModal, addToast);
                   }}
                   className={`w-12 h-12 rounded-lg border flex items-center justify-center text-lg transition-colors ${
-                    wishlist ? 'bg-[#4A1724] text-[#F6F0E6] border-[#4A1724]' : 'bg-[#F6F0E6] border-[#D7B982]/60 text-[#21191A] hover:border-[#4A1724]'
+                    isSaved ? 'bg-[#4A1724] text-[#F6F0E6] border-[#4A1724]' : 'bg-[#F6F0E6] border-[#D7B982]/60 text-[#21191A] hover:border-[#4A1724]'
                   }`}
+                  title={isSaved ? 'Remove from Wishlist' : 'Add to Wishlist'}
                 >
-                  {wishlist ? '♥' : '♡'}
+                  {isSaved ? '♥' : '♡'}
                 </button>
               </div>
             </div>

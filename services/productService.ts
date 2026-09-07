@@ -1,5 +1,6 @@
 import { http } from './http';
 import type { Product, Category } from '@/types';
+export type { Product, Category };
 
 export interface GetProductsParams {
   featured?: boolean;

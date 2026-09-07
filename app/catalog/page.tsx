@@ -1,12 +1,15 @@
 'use client';
 
-import { useEffect, useState, Suspense } from 'react';
+import { useState, useEffect, useTransition, Suspense } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
-import { productService, PaginationInfo } from '@/services/productService';
-import type { Product } from '@/types';
+import { productService } from '@/services/productService';
+import type { Product, PaginationInfo } from '@/services/productService';
+import { ProductCard } from '@/components/product/ProductCard';
 import { useUIStore } from '@/store/uiStore';
+import { useAuthStore } from '@/store/authStore';
+import { useWishlistStore } from '@/store/wishlistStore';
 
 // NOORÉ Fallback Catalog (if DB has no seeded items)
 const FALLBACK_CATALOG = [
@@ -116,7 +119,8 @@ function CatalogContent() {
   const [currentPage, setCurrentPage] = useState(1);
   const [paginationInfo, setPaginationInfo] = useState<PaginationInfo | null>(null);
 
-  const [wishlist, setWishlist] = useState<Record<string, boolean>>({});
+  const { user } = useAuthStore();
+  const { toggleWishlist, isInWishlist } = useWishlistStore();
   const addToast = useUIStore((state) => state.addToast);
   const openModal = useUIStore((state) => state.openModal);
 
@@ -164,16 +168,6 @@ function CatalogContent() {
       setCurrentPage(1);
     }
   }, [searchParams]);
-
-  const toggleWishlist = (e: React.MouseEvent, productId: string, name: string) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setWishlist((prev) => {
-      const next = !prev[productId];
-      addToast(next ? `Saved "${name}" to Wishlist ♡` : `Removed "${name}" from Wishlist`, 'info');
-      return { ...prev, [productId]: next };
-    });
-  };
 
   const resetAllFilters = () => {
     setActiveCategory('all');
@@ -412,57 +406,7 @@ function CatalogContent() {
             ) : (
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
                 {products.map((product) => (
-                  <Link
-                    key={product.id}
-                    href={`/product/${product.slug || product.id}`}
-                    className="group flex flex-col space-y-2.5 cursor-pointer bg-[#E8DDCE]/30 p-3 rounded-2xl border border-[#D7B982]/30 hover:border-[#D7B982] hover:shadow-xl transition-all duration-300"
-                  >
-                    {/* 3:4 Portrait Image */}
-                    <div className="relative aspect-[3/4] w-full overflow-hidden bg-[#E8DDCE] rounded-xl shadow-sm">
-                      <Image
-                        src={product.images[0] || '/images/hero_palace.jpg'}
-                        alt={product.name}
-                        fill
-                        className="object-cover object-center group-hover:scale-105 transition-transform duration-700"
-                      />
-
-                      {/* Scarcity / Craft Tag */}
-                      {product.isFeatured && (
-                        <div className="absolute top-2.5 left-2.5 bg-[#4A1724] text-[#D7B982] text-[8px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider shadow border border-[#D7B982]/30">
-                          BESTSELLER
-                        </div>
-                      )}
-
-                      {/* Wishlist Heart */}
-                      <button
-                        onClick={(e) => toggleWishlist(e, product.id, product.name)}
-                        className="absolute top-2.5 right-2.5 w-7 h-7 rounded-full bg-[#F6F0E6]/90 backdrop-blur-md flex items-center justify-center text-[#4A1724] hover:bg-[#4A1724] hover:text-[#F6F0E6] transition-colors text-xs shadow"
-                      >
-                        {wishlist[product.id] ? '♥' : '♡'}
-                      </button>
-                    </div>
-
-                    {/* Metadata */}
-                    <div className="space-y-0.5 pt-0.5">
-                      <span className="text-[9px] uppercase tracking-widest text-[#B98282] font-bold block truncate">
-                        {product.fabric || 'Royal Heritage Craft'}
-                      </span>
-                      <h3 className="font-serif text-xs font-bold text-[#21191A] group-hover:text-[#4A1724] transition-colors truncate">
-                        {product.name}
-                      </h3>
-
-                      <div className="pt-0.5 flex items-baseline justify-between">
-                        <span className="text-xs font-bold text-[#4A1724]">
-                          ₹ {product.price.toLocaleString('en-IN')}
-                        </span>
-                        {product.salePrice && product.salePrice > product.price && (
-                          <span className="text-[10px] text-[#21191A]/40 line-through">
-                            ₹ {product.salePrice.toLocaleString('en-IN')}
-                          </span>
-                        )}
-                      </div>
-                    </div>
-                  </Link>
+                  <ProductCard key={product.id} product={product} />
                 ))}
               </div>
             )}

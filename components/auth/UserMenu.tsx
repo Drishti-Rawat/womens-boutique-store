@@ -99,11 +99,27 @@ export function UserMenu() {
             )}
 
             <Link
-              href="/orders"
+              href="/account?tab=wishlist"
+              onClick={() => setIsOpen(false)}
+              className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-[#E8DDCE] transition-colors text-[#21191A]"
+            >
+              ♥ My Wishlist
+            </Link>
+
+            <Link
+              href="/account?tab=orders"
               onClick={() => setIsOpen(false)}
               className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-[#E8DDCE] transition-colors text-[#21191A]"
             >
               📦 My Orders
+            </Link>
+
+            <Link
+              href="/account?tab=profile"
+              onClick={() => setIsOpen(false)}
+              className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-[#E8DDCE] transition-colors text-[#21191A]"
+            >
+              👤 My Profile
             </Link>
           </div>
 
