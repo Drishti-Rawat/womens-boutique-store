@@ -252,12 +252,7 @@ export default function AboutPage() {
               EXPLORE COLLECTIONS →
             </Link>
 
-            <button
-              onClick={() => openModal('login')}
-              className="px-8 py-3.5 rounded-full bg-[#F6F0E6] border border-[#4A1724] text-[#4A1724] font-bold text-xs uppercase tracking-widest hover:bg-[#4A1724] hover:text-[#F6F0E6] transition-all shadow"
-            >
-              ASK NOORÉ STYLIST 💬
-            </button>
+
           </div>
         </section>
       </div>

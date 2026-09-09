@@ -9,6 +9,7 @@ import { ProductCard } from '@/components/product/ProductCard';
 import { useUIStore } from '@/store/uiStore';
 import { useAuthStore } from '@/store/authStore';
 import { useWishlistStore } from '@/store/wishlistStore';
+import { useChatStore } from '@/store/chatStore';
 
 // Default curated 4 hero items with artisan scarcity tags
 const MOCKUP_PRODUCTS = [
@@ -85,6 +86,7 @@ export default function Home() {
   const openModal = useUIStore((state) => state.openModal);
   const { user } = useAuthStore();
   const { toggleWishlist, isInWishlist } = useWishlistStore();
+  const { openChat, sendMessage } = useChatStore();
 
   useEffect(() => {
     async function fetchFeaturedProducts() {
@@ -112,10 +114,12 @@ export default function Home() {
 
   const handleAiSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!aiInputText.trim()) return;
-    openModal('login');
-    addToast(`Searching looks for: "${aiInputText}"`, 'info');
+    const text = aiInputText.trim();
+    if (!text) return;
+    openChat();
+    sendMessage(selectedOccasion ? `${text} (for ${selectedOccasion})` : text);
     setAiInputText('');
+    setSelectedOccasion(null);
   };
 
   const displayProducts = (products.length > 0 ? products : (MOCKUP_PRODUCTS as unknown as Product[])).slice(0, 4);
@@ -406,14 +410,7 @@ export default function Home() {
                 Not sure what to wear? Tell us your occasion, style or mood — Nooré will suggest looks just for you.
               </p>
 
-              <div className="pt-2">
-                <button
-                  onClick={() => openModal('login')}
-                  className="px-7 py-3 rounded-full bg-[#D7B982] text-[#4A1724] hover:bg-[#F6F0E6] font-bold text-xs uppercase tracking-widest transition-all shadow-md"
-                >
-                  ASK NOORÉ →
-                </button>
-              </div>
+
             </div>
 
             {/* Right Occasion Selector & Input Bar */}
@@ -427,7 +424,6 @@ export default function Home() {
                 </p>
               </div>
 
-              {/* Occasion Grid */}
               <div className="grid grid-cols-2 gap-2">
                 {[
                   { label: 'Wedding', icon: '💍' },
@@ -439,7 +435,11 @@ export default function Home() {
                 ].map((occ, idx) => (
                   <button
                     key={idx}
-                    onClick={() => setSelectedOccasion(occ.label)}
+                    onClick={() => {
+                      setSelectedOccasion(occ.label);
+                      openChat();
+                      sendMessage(`Show me outfits for ${occ.label}`);
+                    }}
                     className={`px-3 py-2 rounded-lg border text-[11px] font-medium tracking-wider transition-all flex items-center gap-1.5 ${
                       selectedOccasion === occ.label
                         ? 'bg-[#D7B982] text-[#4A1724] border-[#D7B982] font-bold shadow'
@@ -728,14 +728,7 @@ export default function Home() {
           </p>
         </div>
 
-        {/* Floating Bottom-Right Ask Nooré Widget Button */}
-        <button
-          onClick={() => openModal('login')}
-          className="fixed bottom-6 right-6 z-40 px-5 py-3 rounded-full bg-[#4A1724] text-[#F6F0E6] font-bold text-xs uppercase tracking-widest shadow-2xl border border-[#D7B982] flex items-center gap-2 hover:scale-105 transition-all"
-        >
-          <span>Ask Nooré</span>
-          <span>💬</span>
-        </button>
+
       </footer>
     </div>
   );

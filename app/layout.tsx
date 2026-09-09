@@ -6,6 +6,8 @@ import { LoginModal } from '@/components/auth/LoginModal';
 import { RegisterModal } from '@/components/auth/RegisterModal';
 import { ToastContainer } from '@/components/ui/ToastContainer';
 import { CartDrawer } from '@/components/cart/CartDrawer';
+import { ChatButton } from '@/components/chat/ChatButton';
+import { ChatWindow } from '@/components/chat/ChatWindow';
 
 export const metadata: Metadata = {
   title: 'NOORÉ — House of Indian Elegance & AI Stylist',
@@ -35,6 +37,8 @@ export default function RootLayout({
           <RegisterModal />
           <CartDrawer />
           <ToastContainer />
+          <ChatButton />
+          <ChatWindow />
         </AuthProvider>
       </body>
     </html>

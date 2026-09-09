@@ -505,17 +505,7 @@ function CatalogContent() {
         </div>
       </section>
 
-      {/* Floating Style Assistant Button */}
-      <button
-        onClick={() => openModal('login')}
-        className="fixed bottom-6 right-6 z-40 px-4 py-2.5 rounded-full bg-[#4A1724] text-[#F6F0E6] font-bold text-xs uppercase tracking-widest shadow-2xl border border-[#D7B982] flex items-center gap-2.5 hover:scale-105 transition-all"
-      >
-        <div className="flex flex-col text-left">
-          <span className="font-serif text-xs font-bold text-[#F6F0E6]">Ask Nooré</span>
-          <span className="text-[8px] text-[#D7B982] font-sans">Find your perfect look</span>
-        </div>
-        <span className="text-sm">💬</span>
-      </button>
+
     </div>
   );
 }
