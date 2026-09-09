@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useSearchParams, useRouter } from 'next/navigation';
@@ -10,7 +10,7 @@ import { useWishlistStore } from '@/store/wishlistStore';
 import { ProductCard } from '@/components/product/ProductCard';
 import type { Order } from '@/types';
 
-export default function AccountPage() {
+function AccountContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const initialTab = searchParams.get('tab') || 'wishlist';
@@ -319,3 +319,18 @@ export default function AccountPage() {
     </div>
   );
 }
+
+export default function AccountPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-screen bg-[#F6F0E6] flex items-center justify-center p-12">
+          <div className="text-center font-serif text-[#4A1724]">Loading Boutique Suite...</div>
+        </div>
+      }
+    >
+      <AccountContent />
+    </Suspense>
+  );
+}
+

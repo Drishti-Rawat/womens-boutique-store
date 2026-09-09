@@ -36,7 +36,7 @@ function decodeJwtPayload(token: string): JWTPayload | null {
   }
 }
 
-export function middleware(req: NextRequest) {
+export function proxy(req: NextRequest) {
   const { pathname } = req.nextUrl;
   const tokenCookie = req.cookies.get('auth_token')?.value;
   const authHeader = req.headers.get('authorization');
