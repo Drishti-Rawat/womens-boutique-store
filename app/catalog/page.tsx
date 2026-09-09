@@ -114,6 +114,7 @@ function CatalogContent() {
   const [activePriceId, setActivePriceId] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [sortBy, setSortBy] = useState<'featured' | 'low-high' | 'high-low'>('featured');
+  const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
 
   // DB Pagination State
   const [currentPage, setCurrentPage] = useState(1);
@@ -269,11 +270,23 @@ function CatalogContent() {
             {isFiltered && (
               <button
                 onClick={resetAllFilters}
-                className="px-3 py-1 rounded-full bg-[#4A1724] text-[#F6F0E6] text-[10px] font-bold uppercase tracking-wider hover:bg-[#D7B982] hover:text-[#4A1724] transition-all shadow"
+                className="hidden sm:inline-block px-3 py-1 rounded-full bg-[#4A1724] text-[#F6F0E6] text-[10px] font-bold uppercase tracking-wider hover:bg-[#D7B982] hover:text-[#4A1724] transition-all shadow"
               >
                 Reset Filters ↺
               </button>
             )}
+
+            {/* Mobile Filter Toggle */}
+            <button
+              onClick={() => setIsMobileFilterOpen(true)}
+              className="lg:hidden flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#4A1724] text-[#F6F0E6] text-[10px] font-bold uppercase tracking-wider shadow"
+            >
+              <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
+              </svg>
+              <span>Filter</span>
+              {isFiltered && <span className="w-1.5 h-1.5 rounded-full bg-[#D7B982]"></span>}
+            </button>
 
             <div className="flex items-center gap-2">
               <span className="text-[#69705A] font-bold text-[10px] uppercase">Sort:</span>
@@ -298,7 +311,7 @@ function CatalogContent() {
       <div className="max-w-7xl mx-auto px-6 py-6">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
           {/* ─── LEFT SIDEBAR FILTER PANEL ──────────────────────────────────── */}
-          <aside className="lg:col-span-3 space-y-5 text-xs border-r border-[#D7B982]/25 pr-6">
+          <aside className="hidden lg:block lg:col-span-3 space-y-5 text-xs border-r border-[#D7B982]/25 pr-6">
             <div className="flex items-center justify-between pb-2 border-b border-[#D7B982]/30">
               <h2 className="font-serif text-base font-bold text-[#4A1724] flex items-center gap-2">
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -382,7 +395,7 @@ function CatalogContent() {
           {/* ─── RIGHT MAIN CATALOG GRID ──────────────────────────────────── */}
           <main className="lg:col-span-9 space-y-6">
             {loading ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+              <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
                 {[1, 2, 3, 4, 5, 6, 7, 8].map((n) => (
                   <div key={n} className="h-96 bg-[#E8DDCE] animate-pulse rounded-2xl border border-[#D7B982]/30" />
                 ))}
@@ -404,7 +417,7 @@ function CatalogContent() {
                 </button>
               </div>
             ) : (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+              <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
                 {products.map((product) => (
                   <ProductCard key={product.id} product={product} />
                 ))}
@@ -505,6 +518,107 @@ function CatalogContent() {
         </div>
       </section>
 
+      {/* ─── MOBILE FILTER DRAWER (SLIDE UP FROM BOTTOM) ────────────────── */}
+      {isMobileFilterOpen && (
+        <div className="fixed inset-0 z-50 flex flex-col justify-end lg:hidden">
+          {/* Backdrop */}
+          <div 
+            className="absolute inset-0 bg-[#21191A]/60 backdrop-blur-sm transition-opacity" 
+            onClick={() => setIsMobileFilterOpen(false)}
+          />
+          
+          {/* Drawer Content */}
+          <div className="relative bg-[#F6F0E6] w-full max-h-[85vh] rounded-t-3xl shadow-2xl flex flex-col overflow-hidden animate-in slide-in-from-bottom-full duration-300">
+            <div className="px-6 py-4 border-b border-[#D7B982]/30 flex items-center justify-between bg-[#E8DDCE]/80">
+              <h2 className="font-serif text-lg font-bold text-[#4A1724] flex items-center gap-2">
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
+                </svg>
+                <span>Filter & Sort</span>
+              </h2>
+              <button 
+                onClick={() => setIsMobileFilterOpen(false)}
+                className="w-8 h-8 rounded-full bg-[#F6F0E6] border border-[#D7B982]/50 flex items-center justify-center text-[#4A1724] shadow-sm"
+              >
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+
+            {/* Scrollable Filters Area */}
+            <div className="flex-1 overflow-y-auto px-6 py-6 space-y-8 text-sm">
+              {/* Fabric Filter */}
+              <div className="space-y-3">
+                <span className="text-[#4A1724] font-serif font-bold text-sm uppercase tracking-wider block border-b border-[#D7B982]/30 pb-2">
+                  Heritage Fabric
+                </span>
+                <div className="flex flex-wrap gap-2 pt-1">
+                  {FABRIC_FILTERS.map((fab) => (
+                    <button
+                      key={fab}
+                      onClick={() => {
+                        setActiveFabric(fab);
+                        setCurrentPage(1);
+                      }}
+                      className={`px-4 py-2 rounded-full text-xs font-medium transition-all border ${
+                        activeFabric === fab
+                          ? 'bg-[#4A1724] text-[#F6F0E6] border-[#4A1724] shadow-md'
+                          : 'bg-[#F6F0E6] text-[#21191A]/80 border-[#D7B982]/50'
+                      }`}
+                    >
+                      {fab}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Price Filter */}
+              <div className="space-y-3">
+                <span className="text-[#4A1724] font-serif font-bold text-sm uppercase tracking-wider block border-b border-[#D7B982]/30 pb-2">
+                  Price Range
+                </span>
+                <div className="flex flex-col gap-3 pt-1 text-[#21191A]/90">
+                  {PRICE_FILTERS.map((pr) => (
+                    <label key={pr.id} className="flex items-center gap-3 cursor-pointer py-1">
+                      <input
+                        type="radio"
+                        name="mobilePriceFilter"
+                        checked={activePriceId === pr.id}
+                        onChange={() => {
+                          setActivePriceId(pr.id);
+                          setCurrentPage(1);
+                        }}
+                        className="w-4 h-4 accent-[#4A1724]"
+                      />
+                      <span className="font-medium">{pr.label}</span>
+                    </label>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* Sticky Bottom Actions */}
+            <div className="p-6 bg-[#E8DDCE]/80 border-t border-[#D7B982]/30 flex gap-3">
+              <button 
+                onClick={() => {
+                  resetAllFilters();
+                  setIsMobileFilterOpen(false);
+                }}
+                className="flex-1 py-3.5 rounded-full border border-[#4A1724] text-[#4A1724] font-bold text-xs uppercase tracking-widest bg-transparent"
+              >
+                Clear All
+              </button>
+              <button 
+                onClick={() => setIsMobileFilterOpen(false)}
+                className="flex-[2] py-3.5 rounded-full bg-[#4A1724] text-[#F6F0E6] font-bold text-xs uppercase tracking-widest shadow-lg"
+              >
+                View {paginationInfo?.total || 0} Pieces
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
     </div>
   );

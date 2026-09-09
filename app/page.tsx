@@ -273,12 +273,12 @@ export default function Home() {
       {/* ─── 3. SECTION: THE COLLECTIONS (3 CARDS MATCHING MOCK) ─────────────── */}
       <section className="max-w-7xl mx-auto px-6 py-12">
         <div className="flex items-center justify-between mb-8">
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 sm:gap-3">
             <div className="w-8 h-8 rounded-full border border-[#D7B982]/50 flex items-center justify-center text-[#4A1724] text-xs">
               ❀
             </div>
             <div>
-              <h2 className="font-serif text-2xl sm:text-3xl font-bold text-[#4A1724]">
+              <h2 className="font-serif text-lg sm:text-3xl font-bold text-[#4A1724] whitespace-nowrap">
                 THE COLLECTIONS
               </h2>
               <p className="text-xs text-[#21191A]/70 font-light">
@@ -286,8 +286,9 @@ export default function Home() {
               </p>
             </div>
           </div>
-          <Link href="/catalog" className="text-xs uppercase tracking-widest font-bold text-[#4A1724] hover:underline">
-            VIEW ALL →
+          <Link href="/catalog" className="text-[10px] sm:text-xs uppercase tracking-widest font-bold text-[#4A1724] hover:underline whitespace-nowrap">
+            <span className="hidden sm:inline">VIEW ALL →</span>
+            <span className="sm:hidden">EXPLORE →</span>
           </Link>
         </div>
 
@@ -348,12 +349,12 @@ export default function Home() {
       {/* ─── 4. SECTION: THE NOORÉ EDIT (CURATED 4-COLUMN HERO PRODUCT DISPLAY) ─ */}
       <section className="max-w-7xl mx-auto px-6 py-16 border-t border-[#D7B982]/25">
         <div className="flex items-center justify-between mb-8">
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 sm:gap-3">
             <div className="w-8 h-8 rounded-full border border-[#D7B982]/50 flex items-center justify-center text-[#4A1724] text-xs">
               ❀
             </div>
             <div>
-              <h2 className="font-serif text-2xl sm:text-3xl font-bold text-[#4A1724]">
+              <h2 className="font-serif text-lg sm:text-3xl font-bold text-[#4A1724] whitespace-nowrap">
                 THE NOORÉ EDIT
               </h2>
               <p className="text-xs text-[#21191A]/70 font-light">
@@ -361,20 +362,21 @@ export default function Home() {
               </p>
             </div>
           </div>
-          <Link href="/catalog" className="text-xs uppercase tracking-widest font-bold text-[#4A1724] hover:underline">
-            EXPLORE ALL ({products.length > 0 ? '12+' : '4'}) →
+          <Link href="/catalog" className="text-[10px] sm:text-xs uppercase tracking-widest font-bold text-[#4A1724] hover:underline whitespace-nowrap">
+            <span className="hidden sm:inline">EXPLORE ALL ({products.length > 0 ? '12+' : '4'}) →</span>
+            <span className="sm:hidden">EXPLORE →</span>
           </Link>
         </div>
 
         {/* 4 Column Curated Hero Grid */}
         {loadingProducts ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
             {[1, 2, 3, 4].map((n) => (
               <div key={n} className="h-80 bg-[#E8DDCE] animate-pulse rounded-xl border border-[#D7B982]/30" />
             ))}
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
             {displayProducts.map((product, idx) => {
               const tag = (product as unknown as { tag?: string }).tag || MOCKUP_PRODUCTS[idx % 4].tag;
               return <ProductCard key={product.id} product={product} tag={tag} />;

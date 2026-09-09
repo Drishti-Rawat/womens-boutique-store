@@ -75,15 +75,15 @@ export function UserMenu() {
         <div className="w-7 h-7 rounded-full bg-[#4A1724] text-[#F6F0E6] font-bold flex items-center justify-center text-xs uppercase shadow">
           {user.name.charAt(0)}
         </div>
-        <span className="text-xs font-semibold tracking-wide max-w-[100px] truncate">
+        <span className="hidden sm:inline-block text-xs font-semibold tracking-wide max-w-[100px] truncate">
           {user.name}
         </span>
         {user.role === 'ADMIN' && (
-          <span className="bg-[#4A1724]/10 text-[#4A1724] text-[9px] font-bold px-1.5 py-0.5 rounded border border-[#4A1724]/30 uppercase">
+          <span className="hidden sm:inline-block bg-[#4A1724]/10 text-[#4A1724] text-[9px] font-bold px-1.5 py-0.5 rounded border border-[#4A1724]/30 uppercase">
             Admin
           </span>
         )}
-        <span className="text-[#21191A]/60 text-xs">▾</span>
+        <span className="hidden sm:inline-block text-[#21191A]/60 text-xs">▾</span>
       </button>
 
       {isOpen && (

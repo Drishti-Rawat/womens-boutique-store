@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { UserMenu } from '@/components/auth/UserMenu';
@@ -10,6 +11,7 @@ import { useCartStore } from '@/store/cartStore';
 
 export function Header() {
   const router = useRouter();
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { openModal, addToast } = useUIStore();
   const { user } = useAuthStore();
   const { items: wishlistItems } = useWishlistStore();
@@ -29,13 +31,13 @@ export function Header() {
   return (
     <>
       {/* Top Announcement Bar - Deep Burgundy #4A1724 */}
-      <div className="w-full bg-[#4A1724] text-[#D7B982] text-[11px] font-medium tracking-widest py-2 px-6 uppercase border-b border-[#D7B982]/20 flex items-center justify-between">
-        <div className="mx-auto flex items-center gap-3 text-[10px]">
+      <div className="w-full bg-[#4A1724] text-[#D7B982] text-[11px] font-medium tracking-widest py-2 px-2 sm:px-6 uppercase border-b border-[#D7B982]/20 flex items-center justify-center sm:justify-between text-center sm:text-left">
+        <div className="flex flex-wrap items-center justify-center gap-1.5 sm:gap-3 text-[8px] sm:text-[10px]">
           <span>COMPLIMENTARY SHIPPING ON ORDERS ABOVE ₹5,000</span>
-          <span>|</span>
-          <span>EASY RETURNS</span>
-          <span>|</span>
-          <span>CRAFTED IN INDIA</span>
+          <span className="hidden sm:inline">|</span>
+          <span className="hidden sm:inline">EASY RETURNS</span>
+          <span className="hidden sm:inline">|</span>
+          <span className="hidden sm:inline">CRAFTED IN INDIA</span>
         </div>
         <span className="hidden md:inline text-[10px] text-[#D7B982]/80 tracking-widest">
           A MORE BEAUTIFUL TOMORROW
@@ -123,9 +125,9 @@ export function Header() {
           </Link>
 
           {/* Right Controls */}
-          <div className="flex items-center gap-5 text-[#21191A]">
+          <div className="flex items-center gap-2 sm:gap-5 text-[#21191A]">
             {/* Search */}
-            <Link href="/catalog" className="hover:text-[#4A1724] transition-colors" aria-label="Search">
+            <Link href="/catalog" className="hover:text-[#4A1724] transition-colors p-1" aria-label="Search">
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
               </svg>
@@ -141,7 +143,7 @@ export function Header() {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
               </svg>
               {wishlistItems.length > 0 && (
-                <span className="text-xs font-semibold text-[#4A1724]">({wishlistItems.length})</span>
+                <span className="hidden sm:inline-block text-xs font-semibold text-[#4A1724]">({wishlistItems.length})</span>
               )}
             </button>
 
@@ -157,15 +159,56 @@ export function Header() {
               <svg className={`w-4 h-4 ${totalBagItems > 0 ? 'text-[#4A1724]' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
               </svg>
-              <span className={`text-xs font-semibold ${totalBagItems > 0 ? 'text-[#4A1724] font-bold' : ''}`}>
+              <span className={`hidden sm:inline-block text-xs font-semibold ${totalBagItems > 0 ? 'text-[#4A1724] font-bold' : ''}`}>
                 ({totalBagItems})
               </span>
             </button>
 
             {/* User Account */}
             <UserMenu />
+
+            {/* Hamburger Mobile Toggle */}
+            <button
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              className="lg:hidden p-2 -mr-2 text-[#4A1724] hover:bg-[#D7B982]/20 rounded-md transition-colors"
+              aria-label="Toggle Menu"
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                {isMobileMenuOpen ? (
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M6 18L18 6M6 6l12 12" />
+                ) : (
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M4 6h16M4 12h16m-7 6h7" />
+                )}
+              </svg>
+            </button>
           </div>
         </div>
+
+        {/* Mobile Navigation Drawer */}
+        {isMobileMenuOpen && (
+          <div className="lg:hidden absolute top-full left-0 w-full bg-[#F6F0E6] border-b border-[#D7B982]/40 shadow-xl overflow-hidden animate-in slide-in-from-top-2 duration-200">
+            <nav className="flex flex-col py-4 px-6 text-sm uppercase tracking-[0.2em] font-medium text-[#21191A]/80 divide-y divide-[#D7B982]/20">
+              <Link href="/catalog" onClick={() => setIsMobileMenuOpen(false)} className="py-4 hover:text-[#4A1724] transition-colors">
+                COLLECTIONS
+              </Link>
+              <Link href="/catalog?featured=true" onClick={() => setIsMobileMenuOpen(false)} className="py-4 hover:text-[#4A1724] transition-colors">
+                THE EDIT
+              </Link>
+              <Link href="/journal" onClick={() => setIsMobileMenuOpen(false)} className="py-4 hover:text-[#4A1724] transition-colors">
+                JOURNAL
+              </Link>
+              <Link href="/about" onClick={() => setIsMobileMenuOpen(false)} className="py-4 hover:text-[#4A1724] transition-colors">
+                OUR STORY
+              </Link>
+            </nav>
+            <div className="bg-[#E8DDCE]/50 px-6 py-6 border-t border-[#D7B982]/30 flex flex-col items-center justify-center space-y-3">
+              <span className="text-[10px] uppercase tracking-[0.3em] text-[#4A1724] font-bold">WEAR YOUR STORY</span>
+              <div className="w-8 h-8 rounded-full border border-[#D7B982] flex items-center justify-center text-[#4A1724] text-xs">
+                ❀
+              </div>
+            </div>
+          </div>
+        )}
       </header>
     </>
   );

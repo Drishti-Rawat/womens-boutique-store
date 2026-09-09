@@ -79,9 +79,14 @@ export default function AccountPage() {
           </h1>
 
           {user && (
-            <p className="text-xs sm:text-sm text-[#21191A]/70 font-mono">
-              Welcome back, <span className="font-bold text-[#4A1724]">{user.name}</span> ({user.email})
-            </p>
+            <div className="flex flex-col items-center gap-1">
+              <p className="text-xs sm:text-sm text-[#21191A]/70 font-mono">
+                Welcome back, <span className="font-bold text-[#4A1724]">{user.name}</span>
+              </p>
+              <p className="text-[10px] sm:text-xs text-[#21191A]/50 font-mono break-all px-4 text-center">
+                ({user.email})
+              </p>
+            </div>
           )}
         </div>
 
@@ -120,17 +125,17 @@ export default function AccountPage() {
           /* ─── AUTHENTICATED ACCOUNT SUITE ───────────────────────────────── */
           <div className="space-y-8">
             {/* Tabs Bar */}
-            <div className="flex items-center justify-center gap-3 border-b border-[#D7B982]/40 pb-4 text-xs font-semibold">
+            <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3 border-b border-[#D7B982]/40 pb-4 text-[10px] sm:text-xs font-semibold">
               <button
                 onClick={() => setActiveTab('wishlist')}
-                className={`px-6 py-2.5 rounded-full tracking-wider uppercase transition-all border flex items-center gap-2 ${
+                className={`px-3 sm:px-6 py-2 sm:py-2.5 rounded-full tracking-wider uppercase transition-all border flex items-center gap-1.5 sm:gap-2 ${
                   activeTab === 'wishlist'
                     ? 'bg-[#4A1724] text-[#F6F0E6] border-[#4A1724] shadow'
                     : 'bg-[#E8DDCE]/40 text-[#21191A]/80 border-[#D7B982]/40 hover:bg-[#E8DDCE]'
                 }`}
               >
                 <span>♥ My Wishlist</span>
-                <span className={`text-[10px] px-2 py-0.2 rounded-full font-mono ${
+                <span className={`text-[9px] sm:text-[10px] px-1.5 sm:px-2 py-0.5 rounded-full font-mono ${
                   activeTab === 'wishlist' ? 'bg-[#D7B982] text-[#4A1724] font-bold' : 'bg-[#D7B982]/30 text-[#4A1724]'
                 }`}>
                   {wishlistItems.length}
@@ -139,7 +144,7 @@ export default function AccountPage() {
 
               <button
                 onClick={() => setActiveTab('orders')}
-                className={`px-6 py-2.5 rounded-full tracking-wider uppercase transition-all border flex items-center gap-2 ${
+                className={`px-3 sm:px-6 py-2 sm:py-2.5 rounded-full tracking-wider uppercase transition-all border flex items-center gap-1.5 sm:gap-2 ${
                   activeTab === 'orders'
                     ? 'bg-[#4A1724] text-[#F6F0E6] border-[#4A1724] shadow'
                     : 'bg-[#E8DDCE]/40 text-[#21191A]/80 border-[#D7B982]/40 hover:bg-[#E8DDCE]'
@@ -150,7 +155,7 @@ export default function AccountPage() {
 
               <button
                 onClick={() => setActiveTab('profile')}
-                className={`px-6 py-2.5 rounded-full tracking-wider uppercase transition-all border flex items-center gap-2 ${
+                className={`px-3 sm:px-6 py-2 sm:py-2.5 rounded-full tracking-wider uppercase transition-all border flex items-center gap-1.5 sm:gap-2 ${
                   activeTab === 'profile'
                     ? 'bg-[#4A1724] text-[#F6F0E6] border-[#4A1724] shadow'
                     : 'bg-[#E8DDCE]/40 text-[#21191A]/80 border-[#D7B982]/40 hover:bg-[#E8DDCE]'
@@ -163,16 +168,17 @@ export default function AccountPage() {
             {/* TAB CONTENT: WISHLIST */}
             {activeTab === 'wishlist' && (
               <div className="space-y-6">
-                <div className="flex items-center justify-between">
-                  <h2 className="font-serif text-2xl font-bold text-[#4A1724]">
+                <div className="flex items-center justify-between gap-2">
+                  <h2 className="font-serif text-lg sm:text-2xl font-bold text-[#4A1724] truncate">
                     Saved Heirlooms ({wishlistItems.length})
                   </h2>
                   {wishlistItems.length > 0 && (
                     <Link
                       href="/catalog"
-                      className="text-xs font-bold text-[#4A1724] uppercase tracking-wider underline hover:text-[#D7B982]"
+                      className="text-[10px] sm:text-xs font-bold text-[#4A1724] uppercase tracking-wider underline hover:text-[#D7B982] whitespace-nowrap"
                     >
-                      + Explore More Collections
+                      <span className="hidden sm:inline">+ Explore More Collections</span>
+                      <span className="sm:hidden">+ Explore</span>
                     </Link>
                   )}
                 </div>
@@ -206,9 +212,9 @@ export default function AccountPage() {
             {/* TAB CONTENT: ORDERS */}
             {activeTab === 'orders' && (
               <div className="space-y-6">
-                <div className="flex items-center justify-between">
-                  <h2 className="font-serif text-2xl font-bold text-[#4A1724]">
-                    My Orders ({orders.length})
+                <div className="flex items-center justify-between gap-2">
+                  <h2 className="font-serif text-lg sm:text-2xl font-bold text-[#4A1724] truncate">
+                    My Profile
                   </h2>
                 </div>
 
